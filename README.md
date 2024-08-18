@@ -1,1 +1,1 @@
-This is a Codecademy project called "Find Your Hat"
+#This is a Codecademy project called "Find Your Hat"
