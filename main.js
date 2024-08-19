@@ -1,4 +1,4 @@
-//const prompt = require('prompt-sync')({sigint: true});
+const prompt = require('prompt-sync')({sigint: true});
 
 const hat = '^';
 const hole = 'O';
@@ -9,6 +9,7 @@ class Field {
     constructor(size) {
       this.size = size;
       this.field = Field.generateField(size);
+      this.playerPosition = {x: 0, y: 0};
     }
 
     static generateField(size) {
@@ -41,8 +42,25 @@ class Field {
     print() {
         this.field.forEach(row => console.log(row.join('')));
     }
+
+    getInput() {
+        const input = prompt('Enter your move (u = up, d = down, l = left, r = right): ');
+        return input;
+    }
+
+    inBounds() {
+        const { x, y } = this.playerPosition;
+        return x >= 0 && x < this.field[0].length && y >= 0 && y < this.field.length;
+    }
+
+/*    isHole(position) {
+        
+}*/
   }
 
 
 const myField = new Field(Number(process.argv[2]));
 myField.print();
+const input = myField.getInput();
+console.log(input);
+console.log(myField.playerPosition);
