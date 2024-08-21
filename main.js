@@ -53,14 +53,44 @@ class Field {
         return x >= 0 && x < this.field[0].length && y >= 0 && y < this.field.length;
     }
 
-/*    isHole(position) {
-        
-}*/
-  }
+    isHole(position) {
+        const {x, y} = position;
+        return this.field[y][x] === hole;
+    }
 
+    isHat(position) {
+        const {x, y} = position;
+        return this.field[y][x] === hat;
+    }
+}
 
 const myField = new Field(Number(process.argv[2]));
 myField.print();
-const input = myField.getInput();
-console.log(input);
-console.log(myField.playerPosition);
+while (myField.inBounds(myField.playerPosition)) {
+    const input = myField.getInput();
+    switch (input) {
+        case 'u': myField.playerPosition.y -= 1;
+            break;
+        case 'd': myField.playerPosition.y += 1;
+            break;
+        case 'l': myField.playerPosition.x -= 1;
+            break;
+        case 'r': myField.playerPosition.x += 1;
+            break;
+        default: console.log('Invalid Input, try again');
+            continue;
+    }
+    if (!myField.inBounds(myField.playerPosition)) {
+        console.log('You went out of bounds, D\'oh!');
+        break;
+    } else if (myField.isHole(myField.playerPosition)) {
+        console.log('Oh no - you fell in a hole!');
+        break;
+    } else if (myField.isHat(myField.playerPosition)) {
+        console.log('Congrats, you found your hat!');
+        break;
+    } else {
+        myField.field[myField.playerPosition.y][myField.playerPosition.x] = pathCharacter;
+    }
+    myField.print();
+}
