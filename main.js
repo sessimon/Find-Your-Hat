@@ -6,30 +6,36 @@ const fieldCharacter = '░';
 const pathCharacter = '*';
 
 class Field {
-    constructor(size) {
-      this.size = size;
-      this.field = Field.generateField(size);
-      this.playerPosition = {x: 0, y: 0};
+    constructor(height, width) {
+      this.field = Field.generateField(height, width);
+      this.playerPosition = {y: Math.floor(Math.random() * height), x: Math.floor(Math.random() * width)};
+      this.field[this.playerPosition.y][this.playerPosition.x] = pathCharacter;
     }
 
-    static generateField(size) {
-      const field = Array(size).fill().map(() => Array(size).fill(fieldCharacter));
-      field[0][0] = pathCharacter; // Starting point
+    static generateField(height, width) {
+      const field = [];
+      for (let i = 0; i < height; i++) {
+        const row = [];
+        for (let j = 0; j < width; j++) {
+            row.push(fieldCharacter);
+        }
+        field.push(row);
+      }
   
       // Randomly place the hat
       let hatPlaced = false;
       while (!hatPlaced) {
-        const x = Math.floor(Math.random() * size);
-        const y = Math.floor(Math.random() * size);
-        if (field[x][y] === fieldCharacter) {
-          field[x][y] = hat;
+        const x = Math.floor(Math.random() * width);
+        const y = Math.floor(Math.random() * height);
+        if (field[y][x] === fieldCharacter) {
+          field[y][x] = hat;
           hatPlaced = true;
         }
       }
   
       // Randomly place holes
-      for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size; j++) {
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
           if (field[i][j] === fieldCharacter && Math.random() > 0.7) {
             field[i][j] = hole;
           }
@@ -64,7 +70,9 @@ class Field {
     }
 }
 
-const myField = new Field(Number(process.argv[2]));
+const height = parseInt(prompt('Enter field height: '));
+const width = parseInt(prompt('Enter field width: '));
+const myField = new Field(height, width);
 myField.print();
 while (myField.inBounds(myField.playerPosition)) {
     const input = myField.getInput();
